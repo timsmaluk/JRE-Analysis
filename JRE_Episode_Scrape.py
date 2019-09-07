@@ -35,7 +35,6 @@ def scrape_names(soup):
 def hasNumbers(inputString):
     """
     Checks to see if a string contains numbers. Credit to theFourtheye on Stack 
-    shorturl.at/deT27
     :@return(bool): returns True/False if str contains numbers
     """
     return bool(re.search(r'\d', inputString))
