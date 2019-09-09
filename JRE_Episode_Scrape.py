@@ -61,7 +61,7 @@ def scrape_books(url_list):
     :@return(list):list of tuples (books,guest) 
     """
 
-    result = url_connection(url_list[3]) #prints the first link for testing
+    result = url_connection(url_list[1]) #prints the first link for testing
     x = result.find_all("h3", {"class" : "book-title"})
     for a in x:
         list_of_books.append(tuple((a.text).replace('\n', '').rsplit('by ', 1)
