@@ -8,13 +8,22 @@ Created on Sat Aug 31 17:12:21 2019
 from bs4 import BeautifulSoup
 import requests
 import urllib.parse
+import pandas
 import re
-
 
 guests = []
 urls = []
 full_list = []
 list_of_books = []
+
+def url_connection(url):
+    """
+    Creates a soup object to represent the url html
+    :@return(string): returns the html for a given url
+    """
+    url = requests.get(url)
+    soup = BeautifulSoup(url.text, 'lxml')
+    return soup
 
 def scrape_names(soup):
     """
@@ -28,7 +37,7 @@ def scrape_names(soup):
         if r is not None:
             guests.append(r.group(0))
     for links in a:
-        urls.append((links['href']))
+        urls.append(links['href'])
     
     return guests, urls
 
@@ -39,25 +48,22 @@ def hasNumbers(inputString):
     """
     return bool(re.search(r'\d', inputString))
 
-
 def cleanup_links(links):
     """
-    Returns books talked about on the show
-    :@return(list): list of books mentioned by a guest
+    Removes unnecesary urls 
+    :@return(list): list of cleaned urls
     """
 
     for path in links:
         if hasNumbers(path) is True and not "onnit" in path:
             full_list.append(urllib.parse.urljoin('https://jrelibrary.com', 
-                                                  path))
+            path))
     return full_list
-
-
   
 def scrape_books(url_list):
     """
     Returns list of tuples of books mentioned and guest who mentioned it
-    :@return(list):list of tuples (books,guest) 
+    :@return(list):list of tuples (book,author) 
     """
 
     result = url_connection(url_list[1]) #prints the first link for testing
@@ -65,27 +71,14 @@ def scrape_books(url_list):
     for a in x:
         list_of_books.append(tuple((a.text).replace('\n', '').rsplit('by ', 1)
         ))
-    print(list_of_books) 
-
-    
-    
-def url_connection(url):
-    """
-    Creates a soup object to represent the url html
-    :@return(string): returns the html for a given url
-    """
-    url = requests.get(url)
-    soup = BeautifulSoup(url.text, 'lxml')
-    return soup
-
+    return list_of_books
     
 def main():  
     seed = 'https://jrelibrary.com/episode-list/'
     soup = url_connection(seed)
     names, links = scrape_names(soup)
     url_list = cleanup_links(links)
-    scrape_books((url_list))
+    print(scrape_books((url_list)))
 
 if __name__ == "__main__":
      main()
-
