@@ -16,6 +16,7 @@ urls = []
 full_list = []
 list_of_books = []
 episode_number_guest = []
+pointers = {}
 
 def url_connection(url):
     """
@@ -90,14 +91,14 @@ def exporting_to_csv(names, books):
     
     df1 = pd.DataFrame(episode_number_guest, columns= ['Epsiode #', 'Name of Guest'])
     df2 = pd.DataFrame(books, columns = ['Book Title', 'Book Author'])
-    return df1.to_csv(r'/Users/Tim_Smaluk/Desktop/JRE-Analysis/out2.csv',index=False, encoding='utf-8')
-    #return df2.to_csv(r'/Users/Tim_Smaluk/Desktop/JRE-Analysis/out2.csv',index=False, encoding='utf-8')
+    return df1.to_csv(r'/Users/Tim_Smaluk/Desktop/JRE-Analysis/out.csv', encoding='utf-8')
+   #return df2.to_csv(r'/Users/Tim_Smaluk/Desktop/JRE-Analysis/out2.csv', encoding='utf-8')
 
 def main():  
     seed = 'https://jrelibrary.com/episode-list/'
     soup = url_connection(seed)
     names, links = scrape_names(soup)
-    url_list = cleanup_links(links)
+    url_list = cleanup_links(links)   
     books = scrape_books(url_list)
     exporting_to_csv(names, books)
 
